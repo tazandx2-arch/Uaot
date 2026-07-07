@@ -42,7 +42,7 @@
       "control": "S",
       "chainkill": "B",
       "front_kill": "A",
-      "reverse_front_kill": "A",
+      "reverse_front_kill": "B",
       "orbit": "A",
       "grappling": "A"
     },
