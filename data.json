@@ -59,7 +59,7 @@
     "id": "d4",
     "name": "Braun",
     "pfp": "https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "tier": "A",
+    "tier": "pool",
     "stats": {
       "control": "B",
       "chainkill": "C",
