@@ -125,8 +125,8 @@
     "tier": "A",
     "stats": {
       "control": "B",
-      "chainkill": "A",
-      "front_kill": "B",
+      "chainkill": "S",
+      "front_kill": "S",
       "reverse_front_kill": "A",
       "orbit": "A",
       "grappling": "C"
