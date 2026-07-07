@@ -1,25 +1,5 @@
 [
   {
-    "id": "d1",
-    "name": "Ackerman",
-    "pfp": "https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "tier": "A",
-    "stats": {
-      "control": "S",
-      "chainkill": "S",
-      "front_kill": "S",
-      "reverse_front_kill": "A",
-      "orbit": "A",
-      "grappling": "S"
-    },
-    "notes": "Top tier ODM. Crazy kill rate.",
-    "tags": [
-      "hall-of-fame",
-      "smoothest"
-    ],
-    "gallery": []
-  },
-  {
     "id": "d3",
     "name": "Cadet 03",
     "pfp": "https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400",
