@@ -119,23 +119,6 @@
     "gallery": []
   },
   {
-    "id": "e17834171459164m6y",
-    "name": "Osaragi/BestOfUaot",
-    "pfp": "https://cdn.discordapp.com/avatars/947061890998210580/f119eec91077ac32d77299095671c660.png?size=1024",
-    "tier": "A",
-    "stats": {
-      "control": "S",
-      "chainkill": "B",
-      "front_kill": "B",
-      "reverse_front_kill": "D",
-      "orbit": "B",
-      "grappling": "B"
-    },
-    "notes": "",
-    "tags": [],
-    "gallery": []
-  },
-  {
     "id": "e1783417179277in8z",
     "name": "Zed/Dole",
     "pfp": "https://cdn.discordapp.com/avatars/542609527464525824/5c0e96f18b291b00718edc7359744d5d.png?size=1024",
@@ -147,6 +130,23 @@
       "reverse_front_kill": "A",
       "orbit": "A",
       "grappling": "C"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
+  },
+  {
+    "id": "e17834171459164m6y",
+    "name": "Osaragi/BestOfUaot",
+    "pfp": "https://cdn.discordapp.com/avatars/947061890998210580/f119eec91077ac32d77299095671c660.png?size=1024",
+    "tier": "A",
+    "stats": {
+      "control": "S",
+      "chainkill": "B",
+      "front_kill": "B",
+      "reverse_front_kill": "D",
+      "orbit": "B",
+      "grappling": "B"
     },
     "notes": "",
     "tags": [],
