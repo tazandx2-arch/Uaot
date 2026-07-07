@@ -1,16 +1,16 @@
 [
   {
-    "id": "e1783416766069zp3f",
-    "name": "Womp",
-    "pfp": "https://cdn.discordapp.com/avatars/1398643021301682206/edeba6aff319ddb6571e087f9ea86621.png?size=1024",
+    "id": "e1783417031606wcm3",
+    "name": "Summer",
+    "pfp": "https://cdn.discordapp.com/avatars/1201215715529723919/fb08b206142a33d184f075b627c07f69.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "F",
-      "chainkill": "B",
-      "front_kill": "D",
-      "reverse_front_kill": "A",
-      "orbit": "S",
-      "grappling": "D"
+      "control": "E",
+      "chainkill": "C",
+      "front_kill": "S",
+      "reverse_front_kill": "C",
+      "orbit": "B",
+      "grappling": "C"
     },
     "notes": "",
     "tags": [],
@@ -34,17 +34,17 @@
     "gallery": []
   },
   {
-    "id": "e1783417031606wcm3",
-    "name": "Summer",
-    "pfp": "https://cdn.discordapp.com/avatars/1201215715529723919/fb08b206142a33d184f075b627c07f69.png?size=1024",
+    "id": "e1783416766069zp3f",
+    "name": "Womp",
+    "pfp": "https://cdn.discordapp.com/avatars/1398643021301682206/edeba6aff319ddb6571e087f9ea86621.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "E",
-      "chainkill": "C",
-      "front_kill": "S",
-      "reverse_front_kill": "C",
-      "orbit": "B",
-      "grappling": "C"
+      "control": "F",
+      "chainkill": "B",
+      "front_kill": "D",
+      "reverse_front_kill": "A",
+      "orbit": "S",
+      "grappling": "D"
     },
     "notes": "",
     "tags": [],
