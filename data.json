@@ -3,7 +3,7 @@
     "id": "d1",
     "name": "Ackerman",
     "pfp": "https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "tier": "A",
+    "tier": "pool",
     "stats": {
       "control": "S",
       "chainkill": "S",
@@ -23,7 +23,7 @@
     "id": "d2",
     "name": "Jaeger",
     "pfp": "https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400",
-    "tier": "A",
+    "tier": "pool",
     "stats": {
       "control": "C",
       "chainkill": "A",
