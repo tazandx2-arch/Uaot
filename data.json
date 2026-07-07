@@ -74,9 +74,9 @@
     "tier": "S",
     "stats": {
       "control": "B",
-      "chainkill": "C",
-      "front_kill": "C",
-      "reverse_front_kill": "B",
+      "chainkill": "S",
+      "front_kill": "S",
+      "reverse_front_kill": "S",
       "orbit": "A",
       "grappling": "S"
     },
