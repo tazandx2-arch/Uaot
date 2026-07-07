@@ -1,1 +1,92 @@
-[]
+[
+  {
+    "id": "d1",
+    "name": "Ackerman",
+    "pfp": "https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "tier": "A",
+    "stats": {
+      "control": "S",
+      "chainkill": "S",
+      "front_kill": "S",
+      "reverse_front_kill": "A",
+      "orbit": "A",
+      "grappling": "S"
+    },
+    "notes": "Top tier ODM. Crazy kill rate.",
+    "tags": [
+      "hall-of-fame",
+      "smoothest"
+    ],
+    "gallery": []
+  },
+  {
+    "id": "d2",
+    "name": "Jaeger",
+    "pfp": "https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "tier": "A",
+    "stats": {
+      "control": "C",
+      "chainkill": "A",
+      "front_kill": "A",
+      "reverse_front_kill": "D",
+      "orbit": "C",
+      "grappling": "B"
+    },
+    "notes": "Aggressive. Needs better control.",
+    "tags": [
+      "speed-runner"
+    ],
+    "gallery": []
+  },
+  {
+    "id": "d3",
+    "name": "Cadet 03",
+    "pfp": "https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "tier": "pool",
+    "stats": {
+      "control": "D",
+      "chainkill": "E",
+      "front_kill": "D",
+      "reverse_front_kill": "F",
+      "orbit": "D",
+      "grappling": "D"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
+  },
+  {
+    "id": "d4",
+    "name": "Braun",
+    "pfp": "https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400",
+    "tier": "A",
+    "stats": {
+      "control": "B",
+      "chainkill": "C",
+      "front_kill": "B",
+      "reverse_front_kill": "D",
+      "orbit": "C",
+      "grappling": "A"
+    },
+    "notes": "Solid. Good grappling.",
+    "tags": [],
+    "gallery": []
+  },
+  {
+    "id": "e1783416766069zp3f",
+    "name": "Womp",
+    "pfp": "https://cdn.discordapp.com/avatars/1398643021301682206/edeba6aff319ddb6571e087f9ea86621.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "F",
+      "chainkill": "B",
+      "front_kill": "D",
+      "reverse_front_kill": "A",
+      "orbit": "S",
+      "grappling": "D"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
+  }
+]
