@@ -100,5 +100,22 @@
     "notes": "",
     "tags": [],
     "gallery": []
+  },
+  {
+    "id": "e1783417095621foel",
+    "name": "zachosen",
+    "pfp": "https://cdn.discordapp.com/avatars/312612185631358986/ddb23e4efff186bac3f05de695c326c2.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "C",
+      "chainkill": "F",
+      "front_kill": "C",
+      "reverse_front_kill": "A",
+      "orbit": "S",
+      "grappling": "E"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
