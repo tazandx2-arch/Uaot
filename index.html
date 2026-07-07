@@ -161,15 +161,7 @@
   }
   .add-box input[type="text"]::placeholder { color: var(--text-dim); }
 
-  .upload-label {
-    display: inline-flex; align-items: center; gap: 5px; padding: 9px 14px;
-    border-radius: 8px; background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.05); color: var(--text-mid);
-    font-size: 0.78rem; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-  }
-  .upload-label:hover { background: rgba(255,255,255,0.06); color: var(--text-bright); }
-  .upload-label input { display: none; }
-  .upload-label.has-file { background: rgba(194,54,22,0.12); border-color: rgba(194,54,22,0.3); color: var(--text-bright); }
+
 
   .add-btn {
     padding: 10px 22px; border: none; border-radius: 8px;
@@ -649,11 +641,7 @@
   <div class="add-box hidden" id="addBox">
     <div class="inputs">
       <input type="text" id="nameIn" placeholder="Name" maxlength="28">
-      <input type="text" id="imgUrlIn" placeholder="Image URL" style="min-width:100px;">
-      <label class="upload-label" id="uploadLabel">
-        <span id="uploadText">or Upload</span>
-        <input type="file" id="fileIn" accept="image/*">
-      </label>
+      <input type="text" id="imgUrlIn" placeholder="PFP image URL" style="min-width:140px;">
     </div>
     <button class="add-btn" onclick="addPerson()">+ Add</button>
   </div>
@@ -769,7 +757,6 @@ let data = [];
 let picked = null;
 let dragging = null;
 let viewing = null;
-let fileData = null;
 let admin = localStorage.getItem('tl_admin') === '1';
 
 const STATS = ['control','chainkill','front_kill','reverse_front_kill','orbit','grappling'];
@@ -783,12 +770,80 @@ const defaults = [
   {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',reverse_front_kill:'D',orbit:'C',grappling:'A'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
 ];
 
-function save(){localStorage.setItem('tl_data',JSON.stringify(data));if(currentTab==='auto')drawAuto();}
-function load(){
-  const s=localStorage.getItem('tl_data');
-  if(s){data=JSON.parse(s);data.forEach(e=>{if(!e.tags)e.tags=[];if(!e.gallery)e.gallery=[];if(!e.notes)e.notes=e.testResults||'';if(typeof e.stats?.control==='number')e.stats=randStats();});}
-  else{data=JSON.parse(JSON.stringify(defaults));save();}
+// ── Cloud Storage (jsonblob.com) ──
+// After first run, paste your blob ID below so everyone shares the same data.
+// Leave empty to auto-create one on first admin save.
+const BLOB_ID = '';
+
+const BLOB_API = 'https://jsonblob.com/api/jsonBlob';
+let savePending = null;
+let blobId = BLOB_ID || localStorage.getItem('tl_blob_id') || '';
+
+function migrate(arr){
+  arr.forEach(e=>{
+    if(!e.tags)e.tags=[];
+    if(!e.gallery)e.gallery=[];
+    e.gallery=e.gallery.filter(s=>s&&!s.startsWith('data:'));
+    if(e.pfp&&e.pfp.startsWith('data:'))e.pfp='';
+    if(!e.notes)e.notes=e.testResults||'';
+    if(typeof e.stats?.control==='number')e.stats=randStats();
+  });
 }
+
+function save(){
+  localStorage.setItem('tl_data',JSON.stringify(data));
+  if(currentTab==='auto')drawAuto();
+  if(!admin)return;
+  if(savePending)clearTimeout(savePending);
+  savePending=setTimeout(cloudPush,600);
+}
+
+function cloudPush(){
+  const body=JSON.stringify(data);
+  if(blobId){
+    fetch(BLOB_API+'/'+blobId,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body}).catch(()=>{});
+  }else{
+    fetch(BLOB_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body}).then(r=>{
+      const loc=r.headers.get('Location');
+      if(loc){
+        blobId=loc.split('/').pop();
+        localStorage.setItem('tl_blob_id',blobId);
+        toast('Cloud synced. Blob ID: '+blobId);
+        console.log('BLOB ID (paste into BLOB_ID const):',blobId);
+      }
+    }).catch(()=>{});
+  }
+}
+
+function cloudPull(){
+  if(!blobId){
+    const local=localStorage.getItem('tl_data');
+    if(local){data=JSON.parse(local);migrate(data);}
+    else{data=JSON.parse(JSON.stringify(defaults));save();}
+    return Promise.resolve();
+  }
+  return fetch(BLOB_API+'/'+blobId,{headers:{'Accept':'application/json'}})
+    .then(r=>{if(!r.ok)throw 0;return r.json();})
+    .then(d=>{
+      if(Array.isArray(d)&&d.length>0){data=d;migrate(data);localStorage.setItem('tl_data',JSON.stringify(data));}
+      else{const local=localStorage.getItem('tl_data');if(local){data=JSON.parse(local);migrate(data);}else{data=JSON.parse(JSON.stringify(defaults));}}
+    })
+    .catch(()=>{
+      const local=localStorage.getItem('tl_data');
+      if(local){data=JSON.parse(local);migrate(data);}
+      else{data=JSON.parse(JSON.stringify(defaults));}
+    });
+}
+
+function load(){
+  const local=localStorage.getItem('tl_data');
+  if(local){data=JSON.parse(local);migrate(data);}
+  else{data=JSON.parse(JSON.stringify(defaults));}
+  cloudPull().then(()=>{draw();});
+}
+
+// Refresh from cloud every 30s for viewers
+setInterval(()=>{if(!admin&&blobId){cloudPull().then(()=>{draw();});}},30000);
 
 function randStats(){const o={};STATS.forEach(k=>o[k]=GRADES[Math.floor(Math.random()*7)]);return o;}
 
@@ -973,21 +1028,15 @@ function nudgePicked(dir){
 
 function clearPick(){picked=null;document.getElementById('actionBar').classList.remove('show');draw();}
 
-document.getElementById('fileIn').addEventListener('change',function(){
-  const f=this.files&&this.files[0];
-  if(f){const r=new FileReader();r.onload=ev=>{fileData=ev.target.result;document.getElementById('uploadText').textContent=f.name.slice(0,12);document.getElementById('uploadLabel').classList.add('has-file');};r.readAsDataURL(f);}
-});
-
 function addPerson(){
   if(!admin)return;
   const name=document.getElementById('nameIn').value.trim();
-  const url=document.getElementById('imgUrlIn').value.trim();
+  const pfp=document.getElementById('imgUrlIn').value.trim();
   if(!name){toast('Enter a name');return;}
   const id='e'+Date.now()+Math.random().toString(36).slice(2,6);
-  const pfp=fileData||url||'';
   data.push({id,name,pfp,tier:'pool',stats:randStats(),notes:'',tags:[],gallery:[]});
   save();draw();toast(name+' added');
-  document.getElementById('nameIn').value='';document.getElementById('imgUrlIn').value='';fileData=null;document.getElementById('fileIn').value='';document.getElementById('uploadText').textContent='or Upload';document.getElementById('uploadLabel').classList.remove('has-file');
+  document.getElementById('nameIn').value='';document.getElementById('imgUrlIn').value='';
 }
 document.getElementById('nameIn').addEventListener('keydown',e=>{if(e.key==='Enter')addPerson();});
 
@@ -1051,18 +1100,30 @@ document.getElementById('newTagIn').addEventListener('keydown',ev=>{if(ev.key===
 
 function drawGallery(e){
   const g=document.getElementById('gallery');g.innerHTML='';
-  if(!e.gallery||!e.gallery.length){g.innerHTML='<div class="gallery-none">No images</div>';}
-  else{e.gallery.forEach((src,i)=>{
+  const urls=(e.gallery||[]).filter(s=>s&&!s.startsWith('data:'));
+  if(!urls.length){g.innerHTML='<div class="gallery-none">No images</div>';}
+  else{urls.forEach((src,i)=>{
     const th=document.createElement('div');th.className='gallery-thumb';
     const img=document.createElement('img');img.src=src;img.onclick=()=>openLightbox(src);th.appendChild(img);
-    if(admin){const x=document.createElement('button');x.className='del-img';x.textContent='x';x.onclick=ev=>{ev.stopPropagation();e.gallery.splice(i,1);save();drawGallery(e);toast('Removed');};th.appendChild(x);}
+    if(admin){const x=document.createElement('button');x.className='del-img';x.textContent='x';x.onclick=ev=>{ev.stopPropagation();e.gallery.splice(e.gallery.indexOf(src),1);save();drawGallery(e);toast('Removed');};th.appendChild(x);}
     g.appendChild(th);
   });}
   if(admin){
-    const add=document.createElement('label');add.className='add-img-btn';add.textContent='+';
-    const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
-    inp.onchange=function(){if(!this.files||!this.files[0])return;const r=new FileReader();r.onload=ev=>{if(!e.gallery)e.gallery=[];e.gallery.push(ev.target.result);save();drawGallery(e);toast('Added');};r.readAsDataURL(this.files[0]);};
-    add.appendChild(inp);g.appendChild(add);
+    const row=document.createElement('div');
+    row.style.cssText='grid-column:1/-1;display:flex;gap:5px;';
+    const inp=document.createElement('input');
+    inp.type='text';inp.placeholder='Paste image URL...';
+    inp.style.cssText='flex:1;padding:7px 10px;border:1px solid rgba(255,255,255,0.06);border-radius:6px;background:rgba(255,255,255,0.03);font-family:Inter,sans-serif;font-size:0.75rem;color:var(--text-bright);outline:none;';
+    const btn=document.createElement('button');
+    btn.textContent='+';btn.className='add-img-btn';btn.style.cssText='aspect-ratio:auto;width:34px;height:34px;font-size:1rem;flex-shrink:0;';
+    btn.onclick=()=>{
+      const url=inp.value.trim();
+      if(!url){toast('Paste a URL');return;}
+      if(!e.gallery)e.gallery=[];
+      e.gallery.push(url);save();drawGallery(e);toast('Added');
+    };
+    inp.addEventListener('keydown',ev=>{if(ev.key==='Enter')btn.click();});
+    row.appendChild(inp);row.appendChild(btn);g.appendChild(row);
   }
 }
 
