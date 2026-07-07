@@ -770,14 +770,20 @@ const defaults = [
   {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',reverse_front_kill:'D',orbit:'C',grappling:'A'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
 ];
 
-// ── Cloud Storage (jsonblob.com) ──
-// After first run, paste your blob ID below so everyone shares the same data.
-// Leave empty to auto-create one on first admin save.
-const BLOB_ID = '';
+// ── GitHub Storage ──
+// SETUP: Create a fine-grained personal access token at github.com/settings/tokens
+// with Contents read+write permission for your repo, then paste it below.
+// The data.json in your repo is the single source of truth.
+const GH_OWNER = 'tazandx2-arch';
+const GH_REPO  = 'Uaot';
+const GH_FILE  = 'data.json';
+const GH_BRANCH = 'main';
+const GH_TOKEN = ''; // paste your token here
 
-const BLOB_API = 'https://jsonblob.com/api/jsonBlob';
+const GH_API = 'https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE;
+const GH_RAW = 'https://raw.githubusercontent.com/'+GH_OWNER+'/'+GH_REPO+'/'+GH_BRANCH+'/'+GH_FILE;
 let savePending = null;
-let blobId = BLOB_ID || localStorage.getItem('tl_blob_id') || '';
+let fileSha = '';
 
 function migrate(arr){
   arr.forEach(e=>{
@@ -793,57 +799,56 @@ function migrate(arr){
 function save(){
   localStorage.setItem('tl_data',JSON.stringify(data));
   if(currentTab==='auto')drawAuto();
-  if(!admin)return;
+  if(!admin||!GH_TOKEN)return;
   if(savePending)clearTimeout(savePending);
-  savePending=setTimeout(cloudPush,600);
+  savePending=setTimeout(ghPush,800);
 }
 
-function cloudPush(){
-  const body=JSON.stringify(data);
-  if(blobId){
-    fetch(BLOB_API+'/'+blobId,{method:'PUT',headers:{'Content-Type':'application/json','Accept':'application/json'},body}).catch(()=>{});
-  }else{
-    fetch(BLOB_API,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body}).then(r=>{
-      const loc=r.headers.get('Location');
-      if(loc){
-        blobId=loc.split('/').pop();
-        localStorage.setItem('tl_blob_id',blobId);
-        toast('Cloud synced. Blob ID: '+blobId);
-        console.log('BLOB ID (paste into BLOB_ID const):',blobId);
-      }
-    }).catch(()=>{});
-  }
+function ghPush(){
+  if(!GH_TOKEN)return;
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+  const body={message:'Update tierlist',content:content,branch:GH_BRANCH};
+  if(fileSha)body.sha=fileSha;
+  fetch(GH_API,{
+    method:'PUT',
+    headers:{'Authorization':'Bearer '+GH_TOKEN,'Content-Type':'application/json','Accept':'application/vnd.github+json'},
+    body:JSON.stringify(body)
+  }).then(r=>{
+    if(!r.ok)return r.json().then(j=>{console.error('GH save error:',j);toast('Save failed');});
+    return r.json().then(j=>{fileSha=j.content.sha;});
+  }).catch(err=>{console.error(err);toast('Save failed');});
 }
 
-function cloudPull(){
-  if(!blobId){
-    const local=localStorage.getItem('tl_data');
-    if(local){data=JSON.parse(local);migrate(data);}
-    else{data=JSON.parse(JSON.stringify(defaults));save();}
-    return Promise.resolve();
-  }
-  return fetch(BLOB_API+'/'+blobId,{headers:{'Accept':'application/json'}})
+function ghPull(){
+  return fetch(GH_RAW+'?t='+Date.now())
     .then(r=>{if(!r.ok)throw 0;return r.json();})
     .then(d=>{
       if(Array.isArray(d)&&d.length>0){data=d;migrate(data);localStorage.setItem('tl_data',JSON.stringify(data));}
-      else{const local=localStorage.getItem('tl_data');if(local){data=JSON.parse(local);migrate(data);}else{data=JSON.parse(JSON.stringify(defaults));}}
+      else{fallbackLocal();}
     })
-    .catch(()=>{
-      const local=localStorage.getItem('tl_data');
-      if(local){data=JSON.parse(local);migrate(data);}
-      else{data=JSON.parse(JSON.stringify(defaults));}
-    });
+    .then(()=>{
+      // get sha for future writes
+      if(GH_TOKEN){
+        return fetch(GH_API+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+GH_TOKEN,'Accept':'application/vnd.github+json'}})
+          .then(r=>r.json()).then(j=>{if(j.sha)fileSha=j.sha;}).catch(()=>{});
+      }
+    })
+    .catch(()=>{fallbackLocal();});
 }
 
-function load(){
+function fallbackLocal(){
   const local=localStorage.getItem('tl_data');
   if(local){data=JSON.parse(local);migrate(data);}
   else{data=JSON.parse(JSON.stringify(defaults));}
-  cloudPull().then(()=>{draw();});
 }
 
-// Refresh from cloud every 30s for viewers
-setInterval(()=>{if(!admin&&blobId){cloudPull().then(()=>{draw();});}},30000);
+function load(){
+  fallbackLocal();
+  ghPull().then(()=>{draw();});
+}
+
+// Viewers auto-refresh from GitHub every 30s
+setInterval(()=>{if(!admin){ghPull().then(()=>{draw();});}},30000);
 
 function randStats(){const o={};STATS.forEach(k=>o[k]=GRADES[Math.floor(Math.random()*7)]);return o;}
 
