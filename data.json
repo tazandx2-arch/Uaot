@@ -6,7 +6,7 @@
     "tier": "B",
     "stats": {
       "control": "C",
-      "chainkill": "C",
+      "chainkill": "A",
       "front_kill": "S",
       "reverse_front_kill": "C",
       "orbit": "B",
