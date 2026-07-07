@@ -22,12 +22,12 @@
     "pfp": "https://cdn.discordapp.com/avatars/1122091810509029396/c71b1c27775a781c17de1e95e1b1feba.png?size=1024",
     "tier": "S",
     "stats": {
-      "control": "D",
-      "chainkill": "E",
-      "front_kill": "E",
+      "control": "S",
+      "chainkill": "S",
+      "front_kill": "S",
       "reverse_front_kill": "S",
-      "orbit": "F",
-      "grappling": "B"
+      "orbit": "S",
+      "grappling": "S"
     },
     "notes": "",
     "tags": [],
