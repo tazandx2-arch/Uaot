@@ -49,5 +49,22 @@
     "notes": "",
     "tags": [],
     "gallery": []
+  },
+  {
+    "id": "e1783417045332a5ky",
+    "name": "iiStxven",
+    "pfp": "https://cdn.discordapp.com/avatars/277598915274997761/14f1ccce639f41009c96178cc4db3d83.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "D",
+      "chainkill": "B",
+      "front_kill": "E",
+      "reverse_front_kill": "B",
+      "orbit": "D",
+      "grappling": "A"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
