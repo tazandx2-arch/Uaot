@@ -145,7 +145,7 @@
       "chainkill": "S",
       "front_kill": "S",
       "reverse_front_kill": "A",
-      "orbit": "D",
+      "orbit": "C",
       "grappling": "S"
     },
     "notes": "",
