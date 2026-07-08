@@ -246,13 +246,13 @@
     "pfp": "https://cdn.discordapp.com/avatars/1102651434010419241/492b9401be7f08d13c19c91811454268.png?size=1024",
     "tier": "D",
     "stats": {
-      "control": "D",
-      "chainkill": "B",
-      "front_kill": "D",
-      "orbit": "C",
-      "grappling": "D",
+      "control": "F",
+      "chainkill": "F",
+      "front_kill": "F",
+      "orbit": "F",
+      "grappling": "F",
       "consistency": "F",
-      "pathing": "C"
+      "pathing": "F"
     },
     "notes": "",
     "tags": [],
