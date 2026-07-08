@@ -38,7 +38,9 @@
       "https://media.discordapp.net/attachments/1523664596072792145/1523969776718708886/image.png?ex=6a4e0af4&is=6a4cb974&hm=756534b9709fe2265c6b0ebc22f3573a24587167284c5c47e01938f25419cea7&=&format=webp&quality=lossless&width=541&height=644",
       "https://media.discordapp.net/attachments/1523664596072792145/1523969776412655716/image.png?ex=6a4e0af4&is=6a4cb974&hm=bcf75406b91cb649bdba0cc0c420843ec516681c9044c0fdbc83228a6579ecc8&=&format=webp&quality=lossless&width=549&height=637"
     ],
-    "missions": {}
+    "missions": {
+      "outside_walls": "1:27"
+    }
   },
   {
     "id": "e1783417031606wcm3",
