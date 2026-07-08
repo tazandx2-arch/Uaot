@@ -81,7 +81,9 @@
       "founder-of-arena"
     ],
     "gallery": [],
-    "missions": {}
+    "missions": {
+      "forest_base": "1:28"
+    }
   },
   {
     "id": "e1783417179277in8z",
