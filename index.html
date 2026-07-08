@@ -1132,6 +1132,7 @@
       </div>
       <div id="reqFormErr" class="hidden" style="color:#e84118; font-size:0.78rem; text-align:center; font-family:'Rajdhani',sans-serif; font-weight:600; margin-bottom:10px;">Please fill in all required fields</div>
       <button class="add-btn" style="width:100%;" onclick="submitRequest()">Submit Request</button>
+      <div id="reqFormGhHint" style="font-size:0.65rem; color:var(--text-dim); text-align:center; margin-top:8px;"></div>
     </div>
   </div>
 </div>
@@ -1463,6 +1464,7 @@ function openRequestForm(){
   document.getElementById('reqReason').value='';
   document.getElementById('reqProof').value='';
   document.getElementById('reqFormErr').classList.add('hidden');
+  document.getElementById('reqFormGhHint').textContent=admin?'':'Submitting will open a GitHub Issue (requires a GitHub account)';
   document.getElementById('reqFormOverlay').classList.add('open');
 }
 function closeReqForm(ev){if(ev.target===ev.currentTarget)closeReqFormForce();}
@@ -1488,10 +1490,22 @@ function submitRequest(){
     adminNote:''
   };
   requests.unshift(req);
-  saveRequests();
-  closeReqFormForce();
-  drawRequests();
-  toast('Request submitted!');
+
+  if(admin&&ghToken){
+    // Admin can push directly
+    saveRequests();
+    closeReqFormForce();
+    drawRequests();
+    toast('Request submitted!');
+  }else{
+    // Non-admin: open a pre-filled GitHub Issue so anyone can submit
+    let body='**Username:** '+username+'\n**Request:** '+reqType+'\n**Reason:** '+reason;
+    if(proof)body+='\n**Proof:** '+proof;
+    const issueUrl='https://github.com/'+GH_OWNER+'/'+GH_REPO+'/issues/new?title='+encodeURIComponent('[Request] '+username+' — '+reqType)+'&body='+encodeURIComponent(body)+'&labels=request';
+    closeReqFormForce();
+    window.open(issueUrl,'_blank');
+    toast('Opening GitHub to submit your request...');
+  }
 }
 
 function filterRequests(f){
