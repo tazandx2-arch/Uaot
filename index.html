@@ -208,12 +208,16 @@
   .tier-b .tier-letter { background: linear-gradient(180deg, #7d8c3b, #4a5320); }
   .tier-c .tier-letter { background: linear-gradient(180deg, #2e86ab, #1a5276); }
   .tier-d .tier-letter { background: linear-gradient(180deg, #5b5ea6, #3c3f72); }
+  .tier-e .tier-letter { background: linear-gradient(180deg, #6b7280, #3f4652); }
+  .tier-f .tier-letter { background: linear-gradient(180deg, #343434, #181818); }
 
   .tier-s .tier-items { background: rgba(194,54,22,0.03); }
   .tier-a .tier-items { background: rgba(230,126,34,0.02); }
   .tier-b .tier-items { background: rgba(125,140,59,0.02); }
   .tier-c .tier-items { background: rgba(46,134,171,0.02); }
   .tier-d .tier-items { background: rgba(91,94,166,0.02); }
+  .tier-e .tier-items { background: rgba(107,114,128,0.03); }
+  .tier-f .tier-items { background: rgba(52,52,52,0.03); }
 
   .card {
     display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px;
@@ -292,6 +296,8 @@
   .tier-pick.b { background: linear-gradient(135deg, #7d8c3b, #4a5320); }
   .tier-pick.c { background: linear-gradient(135deg, #2e86ab, #1a5276); }
   .tier-pick.d { background: linear-gradient(135deg, #5b5ea6, #3c3f72); }
+  .tier-pick.e { background: linear-gradient(135deg, #6b7280, #3f4652); }
+  .tier-pick.f { background: linear-gradient(135deg, #343434, #181818); }
 
   .pool-pick {
     padding: 6px 12px; border: none; border-radius: 6px;
@@ -576,6 +582,30 @@
     background: rgba(0,0,0,0.5); padding: 1px 5px; border-radius: 4px;
   }
 
+  .mission-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .mission-label {
+    font-family: 'Rajdhani', sans-serif; font-size: 0.68rem; font-weight: 700;
+    color: var(--text-mid); min-width: 80px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .mission-input {
+    width: 72px; padding: 5px 8px; border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px; background: rgba(255,255,255,0.03);
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 1px;
+    color: var(--text-bright); text-align: center; outline: none;
+  }
+  .mission-input:focus { border-color: var(--accent-red); }
+  .mission-input:read-only { cursor: default; opacity: 0.7; }
+  .mission-grade {
+    font-family: 'Bebas Neue', sans-serif; font-size: 0.85rem; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 4px; color: #fff; min-width: 28px; text-align: center;
+  }
+  .mission-wr {
+    font-family: 'Rajdhani', sans-serif; font-size: 0.6rem; color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+
   .hidden { display: none !important; }
 
   @media (max-width: 600px) {
@@ -678,6 +708,14 @@
       <div class="tier-letter">D</div>
       <div class="tier-items" id="tier-D"></div>
     </div>
+    <div class="tier-row tier-e" data-tier="E">
+      <div class="tier-letter">E</div>
+      <div class="tier-items" id="tier-E"></div>
+    </div>
+    <div class="tier-row tier-f" data-tier="F">
+      <div class="tier-letter">F</div>
+      <div class="tier-items" id="tier-F"></div>
+    </div>
   </div>
 
   <div class="pool-box" id="poolBox">
@@ -699,6 +737,8 @@
       <div class="tier-row tier-b"><div class="tier-letter">B</div><div class="tier-items" id="auto-B"></div></div>
       <div class="tier-row tier-c"><div class="tier-letter">C</div><div class="tier-items" id="auto-C"></div></div>
       <div class="tier-row tier-d"><div class="tier-letter">D</div><div class="tier-items" id="auto-D"></div></div>
+      <div class="tier-row tier-e"><div class="tier-letter">E</div><div class="tier-items" id="auto-E"></div></div>
+      <div class="tier-row tier-f"><div class="tier-letter">F</div><div class="tier-items" id="auto-F"></div></div>
     </div>
     <div class="export-bar">
       <button class="export-btn" onclick="copyImage()">Copy as Image</button>
@@ -718,6 +758,8 @@
   <button class="tier-pick b" onclick="moveTo('B')">B</button>
   <button class="tier-pick c" onclick="moveTo('C')">C</button>
   <button class="tier-pick d" onclick="moveTo('D')">D</button>
+  <button class="tier-pick e" onclick="moveTo('E')">E</button>
+  <button class="tier-pick f" onclick="moveTo('F')">F</button>
   <button class="pool-pick" onclick="moveTo('pool')">Unranked</button>
   <button class="cancel-pick" onclick="clearPick()">X</button>
 </div>
@@ -749,6 +791,9 @@
       <textarea class="notes-area" id="notesArea" placeholder="Notes, results, etc..." rows="2"></textarea>
       <div class="notes-hint" id="notesHint"></div>
 
+      <div class="section-label">Mission Times</div>
+      <div id="missionBox"></div>
+
       <div class="section-label">Stats</div>
       <div id="statsBox"></div>
 
@@ -768,11 +813,18 @@ const STATS = ['control','chainkill','front_kill','reverse_front_kill','orbit','
 const STAT_NAMES = {control:'Control',chainkill:'Chain Kill',front_kill:'Front Kill',reverse_front_kill:'Rev FK',orbit:'Orbit',grappling:'Grappling'};
 const GRADES = ['S','A','B','C','D','E','F'];
 const TAGS = [{id:'hall-of-fame',name:'Hall of Fame',c:'#f5a623'},{id:'speed-runner',name:'Speed Runner',c:'#00CEC9'},{id:'smoothest',name:'Smoothest',c:'#a29bfe'}];
+const MISSIONS = [
+  {key:'outside_walls',name:'Outside Walls',wr:'3:03',
+   tiers:[{max:240,g:'S'},{max:300,g:'A'},{max:360,g:'B'},{max:420,g:'C'},{max:Infinity,g:'D'}]},
+  {key:'forest_base',name:'Forest Base',wr:'1:27',
+   tiers:[{max:95,g:'S'},{max:120,g:'A'},{max:150,g:'B'},{max:180,g:'C'},{max:Infinity,g:'D'}]}
+];
+
 const defaults = [
-  {id:'d1',name:'Ackerman',pfp:'https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'S',stats:{control:'S',chainkill:'S',front_kill:'S',reverse_front_kill:'A',orbit:'A',grappling:'S'},notes:'Top tier ODM. Crazy kill rate.',tags:['hall-of-fame','smoothest'],gallery:[]},
-  {id:'d2',name:'Jaeger',pfp:'https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'A',stats:{control:'C',chainkill:'A',front_kill:'A',reverse_front_kill:'D',orbit:'C',grappling:'B'},notes:'Aggressive. Needs better control.',tags:['speed-runner'],gallery:[]},
-  {id:'d3',name:'Cadet 03',pfp:'https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'pool',stats:{control:'D',chainkill:'E',front_kill:'D',reverse_front_kill:'F',orbit:'D',grappling:'D'},notes:'',tags:[],gallery:[]},
-  {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',reverse_front_kill:'D',orbit:'C',grappling:'A'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
+  {id:'d1',name:'Ackerman',pfp:'https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'S',stats:{control:'S',chainkill:'S',front_kill:'S',reverse_front_kill:'A',orbit:'A',grappling:'S'},missions:{outside_walls:'3:45',forest_base:'1:32'},notes:'Top tier ODM. Crazy kill rate.',tags:['hall-of-fame','smoothest'],gallery:[]},
+  {id:'d2',name:'Jaeger',pfp:'https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'A',stats:{control:'C',chainkill:'A',front_kill:'A',reverse_front_kill:'D',orbit:'C',grappling:'B'},missions:{outside_walls:'5:10',forest_base:'2:05'},notes:'Aggressive. Needs better control.',tags:['speed-runner'],gallery:[]},
+  {id:'d3',name:'Cadet 03',pfp:'https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'pool',stats:{control:'D',chainkill:'E',front_kill:'D',reverse_front_kill:'F',orbit:'D',grappling:'D'},missions:{},notes:'',tags:[],gallery:[]},
+  {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',reverse_front_kill:'D',orbit:'C',grappling:'A'},missions:{outside_walls:'5:50',forest_base:'1:55'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
 ];
 
 // ── GitHub Storage ──
@@ -797,6 +849,7 @@ function migrate(arr){
   arr.forEach(e=>{
     if(!e.tags)e.tags=[];
     if(!e.gallery)e.gallery=[];
+    if(!e.missions)e.missions={};
     e.gallery=e.gallery.filter(s=>s&&!s.startsWith('data:'));
     if(e.pfp&&e.pfp.startsWith('data:'))e.pfp='';
     if(!e.notes)e.notes=e.testResults||'';
@@ -813,23 +866,33 @@ function save(){
 }
 
 function ghPush(){
-  if(!ghToken)return;
+  if(!ghToken){toast('No token - cannot save');return;}
+  toast('Syncing...');
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
   const body={message:'Update tierlist',content:content,branch:GH_BRANCH};
   if(fileSha)body.sha=fileSha;
+  else{
+    // need sha first
+    fetch(GH_API+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}})
+      .then(r=>r.json()).then(j=>{
+        if(j.sha){fileSha=j.sha;ghPush();}
+        else{toast('Could not get file SHA');}
+      }).catch(()=>toast('Failed to reach GitHub'));
+    return;
+  }
   fetch(GH_API,{
     method:'PUT',
     headers:{'Authorization':'Bearer '+ghToken,'Content-Type':'application/json','Accept':'application/vnd.github+json'},
     body:JSON.stringify(body)
   }).then(r=>{
-    if(!r.ok)return r.json().then(j=>{console.error('GH save error:',j);toast('Save failed');});
-    return r.json().then(j=>{fileSha=j.content.sha;toast('Saved');});
-  }).catch(err=>{console.error(err);toast('Save failed');});
+    if(!r.ok)return r.json().then(j=>{console.error('GH save error:',j);toast('Save failed: '+(j.message||r.status));});
+    return r.json().then(j=>{fileSha=j.content.sha;toast('Synced');});
+  }).catch(err=>{console.error(err);toast('Save failed: network error');});
 }
 
 function ghPull(){
   return fetch(GH_RAW+'?t='+Date.now())
-    .then(r=>{if(!r.ok)throw 0;return r.json();})
+    .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
     .then(d=>{
       if(Array.isArray(d)&&d.length>0){data=d;migrate(data);localStorage.setItem('tl_data',JSON.stringify(data));}
       else{fallbackLocal();}
@@ -840,7 +903,7 @@ function ghPull(){
           .then(r=>r.json()).then(j=>{if(j.sha)fileSha=j.sha;}).catch(()=>{});
       }
     })
-    .catch(()=>{fallbackLocal();});
+    .catch(e=>{console.warn('ghPull failed:',e);fallbackLocal();});
 }
 
 function fallbackLocal(){
@@ -913,18 +976,54 @@ function switchTab(tab){
   if(tab==='auto')drawAuto();
 }
 
+function timeToSec(str){
+  if(!str)return null;
+  const p=str.trim().split(':');
+  if(p.length!==2)return null;
+  const m=parseInt(p[0]),s=parseInt(p[1]);
+  if(isNaN(m)||isNaN(s))return null;
+  return m*60+s;
+}
+
+function secToTime(sec){
+  if(sec==null)return '';
+  const m=Math.floor(sec/60),s=sec%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+
+function missionGrade(key,seconds){
+  if(seconds==null)return null;
+  const m=MISSIONS.find(x=>x.key===key);
+  if(!m)return null;
+  for(const t of m.tiers){if(seconds<=t.max)return t.g;}
+  return 'D';
+}
+
+function missionGradeColor(g){
+  const map={S:'linear-gradient(135deg,#c23616,#8B0000)',A:'linear-gradient(135deg,#e67e22,#b35400)',B:'linear-gradient(135deg,#7d8c3b,#4a5320)',C:'linear-gradient(135deg,#2e86ab,#1a5276)',D:'linear-gradient(135deg,#5b5ea6,#3c3f72)'};
+  return map[g]||'#444';
+}
+
 function gradeToNum(g){
-  const map={S:7,A:6,B:5,C:4,D:3,E:2,F:1};
+  const map={S:10,A:8,B:6.5,C:5,D:3.5,E:2,F:0.5};
   return map[g]||0;
 }
 
 function calcScore(e){
   if(!e.stats)return 0;
-  const weights={control:1.3,chainkill:1.15,front_kill:1.1,reverse_front_kill:1,orbit:0.95,grappling:0.95};
-  let total=0, weightTotal=0;
+  const statWeights={control:1.3,chainkill:1.15,front_kill:1.1,reverse_front_kill:1,orbit:0.95,grappling:0.95};
+  let total=0,weightTotal=0;
   STATS.forEach(k=>{
     const g=e.stats[k];
-    if(g){total+=gradeToNum(g)*weights[k];weightTotal+=weights[k];}
+    if(g){total+=gradeToNum(g)*statWeights[k];weightTotal+=statWeights[k];}
+  });
+  // factor in mission times
+  const missionWeight=1.2;
+  MISSIONS.forEach(m=>{
+    const t=e.missions&&e.missions[m.key];
+    const sec=timeToSec(t);
+    const g=missionGrade(m.key,sec);
+    if(g){total+=gradeToNum(g)*missionWeight;weightTotal+=missionWeight;}
   });
   return weightTotal?total/weightTotal:0;
 }
@@ -940,22 +1039,24 @@ function compareAuto(a,b){
 }
 
 function scoreToTier(score){
-  if(score>=6.2)return 'S';
-  if(score>=5.2)return 'A';
-  if(score>=4.2)return 'B';
-  if(score>=3.0)return 'C';
-  return 'D';
+  if(score>=9.0)return 'S';
+  if(score>=7.2)return 'A';
+  if(score>=5.5)return 'B';
+  if(score>=4.0)return 'C';
+  if(score>=2.8)return 'D';
+  if(score>=1.6)return 'E';
+  return 'F';
 }
 
 function drawAuto(){
-  ['S','A','B','C','D'].forEach(t=>{document.getElementById('auto-'+t).innerHTML='';});
+  ['S','A','B','C','D','E','F'].forEach(t=>{document.getElementById('auto-'+t).innerHTML='';});
   const scored=data.map(e=>({entry:e,score:calcScore(e)})).sort(compareAuto);
-  const g={S:[],A:[],B:[],C:[],D:[]};
+  const g={S:[],A:[],B:[],C:[],D:[],E:[],F:[]};
   scored.forEach(s=>{
     const tier=scoreToTier(s.score);
     g[tier].push({entry:s.entry,score:s.score});
   });
-  ['S','A','B','C','D'].forEach(t=>{
+  ['S','A','B','C','D','E','F'].forEach(t=>{
     const c=document.getElementById('auto-'+t);
     if(g[t].length===0)c.innerHTML='<span class="empty-msg">--</span>';
     else g[t].forEach(s=>{
@@ -971,11 +1072,11 @@ function drawAuto(){
 }
 
 function draw(){
-  ['S','A','B','C','D'].forEach(t=>{document.getElementById('tier-'+t).innerHTML='';});
+  ['S','A','B','C','D','E','F'].forEach(t=>{document.getElementById('tier-'+t).innerHTML='';});
   document.getElementById('poolItems').innerHTML='';
-  const g={S:[],A:[],B:[],C:[],D:[],pool:[]};
+  const g={S:[],A:[],B:[],C:[],D:[],E:[],F:[],pool:[]};
   data.forEach(e=>{if(g[e.tier])g[e.tier].push(e);else g.pool.push(e);});
-  ['S','A','B','C','D'].forEach(t=>{
+  ['S','A','B','C','D','E','F'].forEach(t=>{
     const c=document.getElementById('tier-'+t);
     if(g[t].length===0)c.innerHTML='<span class="empty-msg">Drop here</span>';
     else g[t].forEach(e=>c.appendChild(mkCard(e)));
@@ -1058,7 +1159,7 @@ function addPerson(){
   const pfp=document.getElementById('imgUrlIn').value.trim();
   if(!name){toast('Enter a name');return;}
   const id='e'+Date.now()+Math.random().toString(36).slice(2,6);
-  data.push({id,name,pfp,tier:'pool',stats:randStats(),notes:'',tags:[],gallery:[]});
+  data.push({id,name,pfp,tier:'pool',stats:randStats(),missions:{},notes:'',tags:[],gallery:[]});
   save();draw();toast(name+' added');
   document.getElementById('nameIn').value='';document.getElementById('imgUrlIn').value='';
 }
@@ -1081,6 +1182,7 @@ function openProfile(e){
   notes.readOnly=!admin;
   document.getElementById('notesHint').textContent=admin?'Auto-saves':'';
 
+  drawMissions(e);
   drawStats(e);
 
   document.getElementById('newTagRow').style.display=admin?'flex':'none';
@@ -1149,6 +1251,36 @@ function drawGallery(e){
     inp.addEventListener('keydown',ev=>{if(ev.key==='Enter')btn.click();});
     row.appendChild(inp);row.appendChild(btn);g.appendChild(row);
   }
+}
+
+function drawMissions(e){
+  const box=document.getElementById('missionBox');box.innerHTML='';
+  if(!e.missions)e.missions={};
+  MISSIONS.forEach(m=>{
+    const row=document.createElement('div');row.className='mission-row';
+    const lbl=document.createElement('span');lbl.className='mission-label';lbl.textContent=m.name;
+    const inp=document.createElement('input');inp.className='mission-input';inp.type='text';
+    inp.placeholder='m:ss';inp.value=e.missions[m.key]||'';inp.readOnly=!admin;
+    inp.maxLength=5;
+    if(admin){
+      inp.addEventListener('change',()=>{
+        const v=inp.value.trim();
+        if(v&&timeToSec(v)===null){toast('Use m:ss format');inp.value=e.missions[m.key]||'';return;}
+        e.missions[m.key]=v;save();drawMissions(e);
+      });
+    }
+    const sec=timeToSec(e.missions[m.key]);
+    const g=missionGrade(m.key,sec);
+    row.appendChild(lbl);row.appendChild(inp);
+    if(g){
+      const badge=document.createElement('span');badge.className='mission-grade';
+      badge.textContent=g;badge.style.background=missionGradeColor(g);
+      row.appendChild(badge);
+    }
+    const wr=document.createElement('span');wr.className='mission-wr';wr.textContent='WR '+m.wr;
+    row.appendChild(wr);
+    box.appendChild(row);
+  });
 }
 
 function drawStats(e){
