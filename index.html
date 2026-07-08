@@ -1283,14 +1283,18 @@ function ghPush(){
 }
 
 function ghPull(){
-  return fetch(GH_RAW+'?t='+Date.now())
-    .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+  // Try raw CDN first, then fall back to GitHub API
+  return fetchDataRaw()
     .then(d=>{
-      // Only replace data if we got a valid non-empty array
-      // This prevents random disappearing when CDN returns stale/empty data
       if(Array.isArray(d)&&d.length>0){data=d;migrate(data);}
+      else throw new Error('empty');
+    })
+    .catch(()=>{
+      // Fallback: use GitHub Contents API (always fresh, but rate-limited)
+      return fetchDataAPI();
     })
     .then(()=>{
+      // Get file SHA for admin writes
       if(ghToken){
         return fetch(GH_API+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}})
           .then(r=>r.json()).then(j=>{if(j.sha)fileSha=j.sha;}).catch(()=>{});
@@ -1299,22 +1303,49 @@ function ghPull(){
     .catch(e=>{console.warn('ghPull failed, keeping existing data:',e);});
 }
 
-function load(){
-  data=[];
-  draw();
-  ghPull().then(()=>{draw();});
+function fetchDataRaw(){
+  return fetch(GH_RAW+'?t='+Date.now())
+    .then(r=>{
+      if(!r.ok)throw new Error(r.status);
+      const ct=r.headers.get('content-type')||'';
+      if(!ct.includes('json')&&!ct.includes('text'))throw new Error('bad content-type');
+      return r.text();
+    })
+    .then(txt=>{
+      // Guard: make sure it's actually JSON, not an HTML error page
+      txt=txt.trim();
+      if(!txt.startsWith('['))throw new Error('not json array');
+      return JSON.parse(txt);
+    });
 }
 
-// Viewers auto-refresh from GitHub every 45s
-setInterval(()=>{
-  if(!admin){
-    const prev=JSON.stringify(data);
-    ghPull().then(()=>{
-      // Only redraw if data actually changed
-      if(JSON.stringify(data)!==prev)draw();
+function fetchDataAPI(){
+  // Uses GitHub Contents API — returns base64-encoded content, always fresh
+  const headers={'Accept':'application/vnd.github+json'};
+  if(ghToken)headers['Authorization']='Bearer '+ghToken;
+  return fetch(GH_API+'?ref='+GH_BRANCH,{headers:headers})
+    .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(j=>{
+      if(j.sha)fileSha=j.sha;
+      if(!j.content)throw new Error('no content');
+      const decoded=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+      const d=JSON.parse(decoded);
+      if(Array.isArray(d)&&d.length>0){data=d;migrate(data);}
     });
-  }
-},45000);
+}
+
+function load(){
+  // Never start with empty data — show loading state, then draw when data arrives
+  ghPull().then(()=>{draw();}).catch(()=>{draw();});
+}
+
+// Viewers auto-refresh from GitHub every 60s
+setInterval(()=>{
+  const prev=JSON.stringify(data);
+  ghPull().then(()=>{
+    if(JSON.stringify(data)!==prev)draw();
+  });
+},60000);
 
 function randStats(){const o={};STATS.forEach(k=>o[k]=GRADES[Math.floor(Math.random()*7)]);return o;}
 
@@ -1764,8 +1795,8 @@ function drawRequests(){
   });
 }
 
-// Auto-refresh requests every 30s
-setInterval(()=>{loadRequests();},30000);
+// Auto-refresh requests every 90s (GitHub API rate limit: 60/hr unauthenticated)
+setInterval(()=>{loadRequests();},90000);
 
 function timeToSec(str){
   if(!str)return null;
