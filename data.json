@@ -262,8 +262,8 @@
       "control": "D",
       "chainkill": "B",
       "front_kill": "C",
-      "orbit": "B",
-      "grappling": "B",
+      "orbit": "D",
+      "grappling": "C",
       "consistency": "E"
     },
     "notes": "",
