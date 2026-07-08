@@ -59,7 +59,9 @@
       "consistency": "B"
     },
     "notes": "Tied With Womp. Could be better",
-    "tags": [],
+    "tags": [
+      "hall-of-fame"
+    ],
     "gallery": [],
     "missions": {
       "forest_base": "1:51"
@@ -99,7 +101,7 @@
       "front_kill": "S",
       "orbit": "A",
       "grappling": "S",
-      "consistency": "B"
+      "consistency": "A"
     },
     "notes": "Inconsistent",
     "tags": [
