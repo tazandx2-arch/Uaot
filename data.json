@@ -1,21 +1,21 @@
 [
   {
-    "id": "e1783417031606wcm3",
-    "name": "Summer",
-    "pfp": "https://cdn.discordapp.com/avatars/1201215715529723919/fb08b206142a33d184f075b627c07f69.png?size=1024",
+    "id": "e1783486663027mz15",
+    "name": "ae0nmike",
+    "pfp": "https://cdn.discordapp.com/avatars/858909711529410570/1a0ea17e86c77922c72a5effcdec7cdf.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "C",
-      "chainkill": "A",
-      "front_kill": "C",
-      "reverse_front_kill": "C",
-      "orbit": "B",
-      "grappling": "S"
+      "control": "F",
+      "chainkill": "E",
+      "front_kill": "D",
+      "reverse_front_kill": "D",
+      "orbit": "E",
+      "grappling": "E"
     },
-    "notes": "Tied With Womp. Could be better",
+    "missions": {},
+    "notes": "",
     "tags": [],
-    "gallery": [],
-    "missions": {}
+    "gallery": []
   },
   {
     "id": "e1783416992429f5ak",
@@ -41,24 +41,21 @@
     "missions": {}
   },
   {
-    "id": "e1783416766069zp3f",
-    "name": "Womp",
-    "pfp": "https://cdn.discordapp.com/avatars/1398643021301682206/edeba6aff319ddb6571e087f9ea86621.png?size=1024",
+    "id": "e1783417031606wcm3",
+    "name": "Summer",
+    "pfp": "https://cdn.discordapp.com/avatars/1201215715529723919/fb08b206142a33d184f075b627c07f69.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "A",
-      "chainkill": "B",
-      "front_kill": "B",
-      "reverse_front_kill": "A",
-      "orbit": "D",
-      "grappling": "B"
+      "control": "C",
+      "chainkill": "A",
+      "front_kill": "C",
+      "reverse_front_kill": "C",
+      "orbit": "B",
+      "grappling": "S"
     },
     "notes": "Tied With Womp. Could be better",
     "tags": [],
-    "gallery": [
-      "https://media.discordapp.net/attachments/1523664596072792145/1523969776412655716/image.png?ex=6a4e0af4&is=6a4cb974&hm=bcf75406b91cb649bdba0cc0c420843ec516681c9044c0fdbc83228a6579ecc8&=&format=webp&quality=lossless&width=549&height=637",
-      "https://media.discordapp.net/attachments/1523664596072792145/1523969776718708886/image.png?ex=6a4e0af4&is=6a4cb974&hm=756534b9709fe2265c6b0ebc22f3573a24587167284c5c47e01938f25419cea7&=&format=webp&quality=lossless&width=541&height=644"
-    ],
+    "gallery": [],
     "missions": {}
   },
   {
@@ -102,21 +99,24 @@
     "missions": {}
   },
   {
-    "id": "e1783417095621foel",
-    "name": "zachosen",
-    "pfp": "https://cdn.discordapp.com/avatars/312612185631358986/ddb23e4efff186bac3f05de695c326c2.png?size=1024",
+    "id": "e1783416766069zp3f",
+    "name": "Womp",
+    "pfp": "https://cdn.discordapp.com/avatars/1398643021301682206/edeba6aff319ddb6571e087f9ea86621.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "C",
-      "chainkill": "F",
-      "front_kill": "C",
+      "control": "A",
+      "chainkill": "B",
+      "front_kill": "B",
       "reverse_front_kill": "A",
-      "orbit": "S",
-      "grappling": "E"
+      "orbit": "D",
+      "grappling": "B"
     },
-    "notes": "",
+    "notes": "Tied With Womp. Could be better",
     "tags": [],
-    "gallery": [],
+    "gallery": [
+      "https://media.discordapp.net/attachments/1523664596072792145/1523969776412655716/image.png?ex=6a4e0af4&is=6a4cb974&hm=bcf75406b91cb649bdba0cc0c420843ec516681c9044c0fdbc83228a6579ecc8&=&format=webp&quality=lossless&width=549&height=637",
+      "https://media.discordapp.net/attachments/1523664596072792145/1523969776718708886/image.png?ex=6a4e0af4&is=6a4cb974&hm=756534b9709fe2265c6b0ebc22f3573a24587167284c5c47e01938f25419cea7&=&format=webp&quality=lossless&width=541&height=644"
+    ],
     "missions": {}
   },
   {
@@ -248,21 +248,21 @@
     "missions": {}
   },
   {
-    "id": "e1783486663027mz15",
-    "name": "ae0nmike",
-    "pfp": "https://cdn.discordapp.com/avatars/858909711529410570/1a0ea17e86c77922c72a5effcdec7cdf.png?size=1024",
+    "id": "e1783417095621foel",
+    "name": "zachosen",
+    "pfp": "https://cdn.discordapp.com/avatars/312612185631358986/ddb23e4efff186bac3f05de695c326c2.png?size=1024",
     "tier": "B",
     "stats": {
-      "control": "F",
-      "chainkill": "E",
-      "front_kill": "D",
-      "reverse_front_kill": "D",
-      "orbit": "E",
+      "control": "C",
+      "chainkill": "F",
+      "front_kill": "C",
+      "reverse_front_kill": "A",
+      "orbit": "S",
       "grappling": "E"
     },
-    "missions": {},
     "notes": "",
     "tags": [],
-    "gallery": []
+    "gallery": [],
+    "missions": {}
   }
 ]
