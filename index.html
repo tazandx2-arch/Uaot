@@ -1286,7 +1286,9 @@ function ghPull(){
   return fetch(GH_RAW+'?t='+Date.now())
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
     .then(d=>{
-      if(Array.isArray(d)){data=d;migrate(data);}
+      // Only replace data if we got a valid non-empty array
+      // This prevents random disappearing when CDN returns stale/empty data
+      if(Array.isArray(d)&&d.length>0){data=d;migrate(data);}
     })
     .then(()=>{
       if(ghToken){
@@ -1294,7 +1296,7 @@ function ghPull(){
           .then(r=>r.json()).then(j=>{if(j.sha)fileSha=j.sha;}).catch(()=>{});
       }
     })
-    .catch(e=>{console.warn('ghPull failed:',e);});
+    .catch(e=>{console.warn('ghPull failed, keeping existing data:',e);});
 }
 
 function load(){
@@ -1303,8 +1305,16 @@ function load(){
   ghPull().then(()=>{draw();});
 }
 
-// Viewers auto-refresh from GitHub every 30s
-setInterval(()=>{if(!admin){ghPull().then(()=>{draw();});}},30000);
+// Viewers auto-refresh from GitHub every 45s
+setInterval(()=>{
+  if(!admin){
+    const prev=JSON.stringify(data);
+    ghPull().then(()=>{
+      // Only redraw if data actually changed
+      if(JSON.stringify(data)!==prev)draw();
+    });
+  }
+},45000);
 
 function randStats(){const o={};STATS.forEach(k=>o[k]=GRADES[Math.floor(Math.random()*7)]);return o;}
 
@@ -1406,11 +1416,59 @@ let reqSha='';
 let reqFilter='all';
 
 function loadRequests(){
-  fetch(GH_REQ_RAW+'?t='+Date.now())
+  const fileReq=fetch(GH_REQ_RAW+'?t='+Date.now())
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(d=>{if(Array.isArray(d)){requests=d;}})
-    .catch(()=>{requests=[];})
-    .finally(()=>{updateReqBadge();if(currentTab==='requests')drawRequests();});
+    .then(d=>Array.isArray(d)?d:[])
+    .catch(()=>[]);
+
+  const issuesReq=fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/issues?labels=request&state=all&per_page=50&t='+Date.now(),{headers:{'Accept':'application/vnd.github+json'}})
+    .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
+    .then(issues=>{
+      if(!Array.isArray(issues))return [];
+      return issues.map(iss=>{
+        // Parse the issue body to extract fields
+        const body=iss.body||'';
+        const getField=(label)=>{const m=body.match(new RegExp('\\*\\*'+label+':\\*\\*\\s*(.+)'));return m?m[1].trim():'';};
+        const username=getField('Username')||iss.user.login;
+        const reqType=getField('Request')||iss.title.replace(/^\[Request\]\s*/i,'');
+        const reason=getField('Reason')||body;
+        const proof=getField('Proof')||'';
+        const isClosed=iss.state==='closed';
+        // Map issue labels to status
+        let status='open';
+        const lblNames=(iss.labels||[]).map(l=>typeof l==='string'?l:l.name);
+        if(lblNames.includes('accepted'))status='accepted';
+        else if(lblNames.includes('denied'))status='denied';
+        else if(isClosed)status='closed';
+        return {
+          id:'gh-issue-'+iss.number,
+          issueNumber:iss.number,
+          issueUrl:iss.html_url,
+          username:username,
+          requestType:reqType,
+          reason:reason,
+          proof:proof,
+          status:status,
+          timestamp:new Date(iss.created_at).getTime(),
+          adminNote:'',
+          fromIssue:true
+        };
+      });
+    })
+    .catch(()=>[]);
+
+  Promise.all([fileReq,issuesReq]).then(([fileData,issueData])=>{
+    // Merge: file requests + issue requests (dedup by id)
+    const merged=[...fileData];
+    const existingIds=new Set(merged.map(r=>r.id));
+    issueData.forEach(ir=>{if(!existingIds.has(ir.id))merged.push(ir);});
+    // Sort newest first
+    merged.sort((a,b)=>b.timestamp-a.timestamp);
+    requests=merged;
+    updateReqBadge();
+    if(currentTab==='requests')drawRequests();
+  });
+
   // get sha for writing
   if(ghToken){
     fetch(GH_REQ_API+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}})
@@ -1529,7 +1587,21 @@ function handleRequest(id,action){
     req.status='closed';
     toast('Request closed');
   }
-  saveRequests();
+  // If it's a GitHub issue, update it via the API
+  if(req.fromIssue&&req.issueNumber&&ghToken){
+    const issueApiUrl='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/issues/'+req.issueNumber;
+    const state=(action==='close'||action==='deny')?'closed':'open';
+    const labels=['request'];
+    if(action==='accept')labels.push('accepted');
+    if(action==='deny')labels.push('denied');
+    fetch(issueApiUrl,{
+      method:'PATCH',
+      headers:{'Authorization':'Bearer '+ghToken,'Content-Type':'application/json','Accept':'application/vnd.github+json'},
+      body:JSON.stringify({state:state,labels:labels})
+    }).catch(()=>toast('Failed to update GitHub issue'));
+  }else{
+    saveRequests();
+  }
   drawRequests();
 }
 
@@ -1614,6 +1686,22 @@ function drawRequests(){
       card.appendChild(proofDiv);
     }
 
+    if(req.fromIssue&&req.issueUrl){
+      const issLink=document.createElement('div');
+      issLink.className='req-card-proof';
+      const issLabel=document.createElement('div');
+      issLabel.className='req-card-proof-label';
+      issLabel.textContent='GitHub Issue #'+req.issueNumber;
+      const issA=document.createElement('a');
+      issA.href=req.issueUrl;
+      issA.target='_blank';
+      issA.rel='noopener';
+      issA.textContent='View on GitHub';
+      issLink.appendChild(issLabel);
+      issLink.appendChild(issA);
+      card.appendChild(issLink);
+    }
+
     if(req.adminNote){
       const note=document.createElement('div');
       note.className='req-admin-note';
@@ -1648,13 +1736,27 @@ function drawRequests(){
       const reopenBtn=document.createElement('button');
       reopenBtn.className='req-act-btn close-req';
       reopenBtn.textContent='Reopen';
-      reopenBtn.onclick=()=>{req.status='open';saveRequests();drawRequests();toast('Reopened');};
-      const delBtn=document.createElement('button');
-      delBtn.className='req-act-btn deny';
-      delBtn.textContent='Delete';
-      delBtn.onclick=()=>deleteRequest(req.id);
-      actions.appendChild(reopenBtn);
-      actions.appendChild(delBtn);
+      reopenBtn.onclick=()=>{
+        req.status='open';
+        if(req.fromIssue&&req.issueNumber&&ghToken){
+          fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/issues/'+req.issueNumber,{
+            method:'PATCH',
+            headers:{'Authorization':'Bearer '+ghToken,'Content-Type':'application/json','Accept':'application/vnd.github+json'},
+            body:JSON.stringify({state:'open',labels:['request']})
+          }).catch(()=>toast('Failed to reopen issue'));
+        }else{saveRequests();}
+        drawRequests();toast('Reopened');
+      };
+      if(!req.fromIssue){
+        const delBtn=document.createElement('button');
+        delBtn.className='req-act-btn deny';
+        delBtn.textContent='Delete';
+        delBtn.onclick=()=>deleteRequest(req.id);
+        actions.appendChild(reopenBtn);
+        actions.appendChild(delBtn);
+      }else{
+        actions.appendChild(reopenBtn);
+      }
       card.appendChild(actions);
     }
 
