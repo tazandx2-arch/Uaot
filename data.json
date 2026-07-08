@@ -98,7 +98,7 @@
     "stats": {
       "control": "A",
       "chainkill": "A",
-      "front_kill": "S",
+      "front_kill": "F",
       "orbit": "F",
       "grappling": "S",
       "consistency": "A"
