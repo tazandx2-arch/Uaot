@@ -91,27 +91,23 @@
     }
   },
   {
-    "id": "e1783417179277in8z",
-    "name": "Zed/Dole",
-    "pfp": "https://cdn.discordapp.com/avatars/542609527464525824/5c0e96f18b291b00718edc7359744d5d.png?size=1024",
+    "id": "e17835122556668fc9",
+    "name": "klefend",
+    "pfp": "https://cdn.discordapp.com/avatars/945669909063532554/c40694ad7fd4b067713d5bd89225e61a.png?size=1024",
     "tier": "A",
     "stats": {
       "control": "B",
       "chainkill": "S",
-      "front_kill": "S",
-      "orbit": "B",
-      "grappling": "S",
+      "front_kill": "A",
       "consistency": "A",
+      "orbit": "S",
+      "grappling": "S",
       "pathing": "A"
     },
-    "notes": "Inconsistent",
-    "tags": [
-      "hall-of-fame"
-    ],
-    "gallery": [],
-    "missions": {
-      "forest_base": ""
-    }
+    "missions": {},
+    "notes": "",
+    "tags": [],
+    "gallery": []
   },
   {
     "id": "e1783417031606wcm3",
@@ -160,24 +156,26 @@
     }
   },
   {
-    "id": "e17834171459164m6y",
-    "name": "Osaragi/BestOfUaot",
-    "pfp": "https://cdn.discordapp.com/avatars/947061890998210580/f119eec91077ac32d77299095671c660.png?size=1024",
+    "id": "e1783417179277in8z",
+    "name": "Zed/Dole",
+    "pfp": "https://cdn.discordapp.com/avatars/542609527464525824/5c0e96f18b291b00718edc7359744d5d.png?size=1024",
     "tier": "A",
     "stats": {
-      "control": "A",
-      "chainkill": "A",
+      "control": "B",
+      "chainkill": "S",
       "front_kill": "S",
       "orbit": "B",
       "grappling": "S",
       "consistency": "A",
       "pathing": "A"
     },
-    "notes": "S tier soon.",
-    "tags": [],
+    "notes": "Inconsistent",
+    "tags": [
+      "hall-of-fame"
+    ],
     "gallery": [],
     "missions": {
-      "forest_base": "1:38"
+      "forest_base": ""
     }
   },
   {
@@ -304,22 +302,24 @@
     "missions": {}
   },
   {
-    "id": "e17835122556668fc9",
-    "name": "klefend",
-    "pfp": "https://cdn.discordapp.com/avatars/945669909063532554/c40694ad7fd4b067713d5bd89225e61a.png?size=1024",
+    "id": "e17834171459164m6y",
+    "name": "Osaragi/BestOfUaot",
+    "pfp": "https://cdn.discordapp.com/avatars/947061890998210580/f119eec91077ac32d77299095671c660.png?size=1024",
     "tier": "A",
     "stats": {
-      "control": "B",
-      "chainkill": "S",
-      "front_kill": "A",
-      "consistency": "A",
-      "orbit": "S",
+      "control": "A",
+      "chainkill": "A",
+      "front_kill": "S",
+      "orbit": "B",
       "grappling": "S",
+      "consistency": "A",
       "pathing": "A"
     },
-    "missions": {},
-    "notes": "",
+    "notes": "S tier soon.",
     "tags": [],
-    "gallery": []
+    "gallery": [],
+    "missions": {
+      "forest_base": "1:38"
+    }
   }
 ]
