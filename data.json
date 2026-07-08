@@ -182,5 +182,22 @@
     "notes": "",
     "tags": [],
     "gallery": []
+  },
+  {
+    "id": "e1783486197578d12p",
+    "name": "AshFroaki",
+    "pfp": "https://cdn.discordapp.com/avatars/871012961018318878/648ba9205d702bf9c7418dc6ebe78e40.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "D",
+      "chainkill": "S",
+      "front_kill": "C",
+      "reverse_front_kill": "E",
+      "orbit": "C",
+      "grappling": "A"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
