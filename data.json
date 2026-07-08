@@ -205,6 +205,25 @@
     "gallery": []
   },
   {
+    "id": "e1783417095621foel",
+    "name": "zachosen",
+    "pfp": "https://cdn.discordapp.com/avatars/312612185631358986/ddb23e4efff186bac3f05de695c326c2.png?size=1024",
+    "tier": "C",
+    "stats": {
+      "control": "C",
+      "chainkill": "C",
+      "front_kill": "C",
+      "orbit": "B",
+      "grappling": "C",
+      "consistency": "B",
+      "pathing": "C"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": [],
+    "missions": {}
+  },
+  {
     "id": "e1783486252611qabd",
     "name": "The one with energy",
     "pfp": "https://cdn.discordapp.com/avatars/1468669989492887662/2a6b9727d3cc678bae58d691fe4908eb.png?size=1024",
@@ -222,29 +241,6 @@
     "tags": [],
     "gallery": [],
     "missions": {}
-  },
-  {
-    "id": "e17834861725549ok7",
-    "name": "LegDkGend",
-    "pfp": "https://cdn.discordapp.com/avatars/1230967364183658567/cd7e87cc3ae851644fc87f2c869980bd.png?size=1024",
-    "tier": "C",
-    "stats": {
-      "control": "D",
-      "chainkill": "C",
-      "front_kill": "B",
-      "orbit": "C",
-      "grappling": "C",
-      "consistency": "D",
-      "pathing": "C"
-    },
-    "notes": "",
-    "tags": [
-      "hall-of-fame"
-    ],
-    "gallery": [],
-    "missions": {
-      "forest_base": "2:41"
-    }
   },
   {
     "id": "e17834862306998fcp",
@@ -285,23 +281,27 @@
     "missions": {}
   },
   {
-    "id": "e1783417095621foel",
-    "name": "zachosen",
-    "pfp": "https://cdn.discordapp.com/avatars/312612185631358986/ddb23e4efff186bac3f05de695c326c2.png?size=1024",
+    "id": "e17834861725549ok7",
+    "name": "LegDkGend",
+    "pfp": "https://cdn.discordapp.com/avatars/1230967364183658567/cd7e87cc3ae851644fc87f2c869980bd.png?size=1024",
     "tier": "C",
     "stats": {
-      "control": "C",
+      "control": "D",
       "chainkill": "C",
-      "front_kill": "C",
-      "orbit": "B",
+      "front_kill": "B",
+      "orbit": "C",
       "grappling": "C",
-      "consistency": "B",
+      "consistency": "D",
       "pathing": "C"
     },
     "notes": "",
-    "tags": [],
+    "tags": [
+      "hall-of-fame"
+    ],
     "gallery": [],
-    "missions": {}
+    "missions": {
+      "forest_base": "2:41"
+    }
   },
   {
     "id": "e17835122556668fc9",
