@@ -199,5 +199,22 @@
     "notes": "",
     "tags": [],
     "gallery": []
+  },
+  {
+    "id": "e17834862306998fcp",
+    "name": "brotkkek",
+    "pfp": "https://cdn.discordapp.com/avatars/1102651434010419241/492b9401be7f08d13c19c91811454268.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "S",
+      "chainkill": "D",
+      "front_kill": "C",
+      "reverse_front_kill": "F",
+      "orbit": "S",
+      "grappling": "S"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
