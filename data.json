@@ -312,7 +312,7 @@
       "control": "B",
       "chainkill": "S",
       "front_kill": "A",
-      "consistency": "E",
+      "consistency": "A",
       "orbit": "B",
       "grappling": "B",
       "pathing": "C"
