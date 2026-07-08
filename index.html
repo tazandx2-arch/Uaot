@@ -1033,8 +1033,8 @@ let dragging = null;
 let viewing = null;
 let admin = false;
 
-const STATS = ['control','chainkill','front_kill','reverse_front_kill','orbit','grappling'];
-const STAT_NAMES = {control:'Control',chainkill:'Chain Kill',front_kill:'Front Kill',reverse_front_kill:'Rev FK',orbit:'Orbit',grappling:'Grappling'};
+const STATS = ['control','chainkill','front_kill','consistency','orbit','grappling'];
+const STAT_NAMES = {control:'Control',chainkill:'Chain Kill',front_kill:'Front Kill',consistency:'Consistency',orbit:'Orbit',grappling:'Grappling'};
 const GRADES = ['S','A','B','C','D','E','F'];
 const TAGS = [{id:'hall-of-fame',name:'Hall of Fame',c:'#f5a623'},{id:'speed-runner',name:'Speed Runner',c:'#00CEC9'},{id:'smoothest',name:'Smoothest',c:'#a29bfe'}];
 const MISSIONS = [
@@ -1045,10 +1045,10 @@ const MISSIONS = [
 ];
 
 const defaults = [
-  {id:'d1',name:'Ackerman',pfp:'https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'S',stats:{control:'S',chainkill:'S',front_kill:'S',reverse_front_kill:'A',orbit:'A',grappling:'S'},missions:{outside_walls:'3:45',forest_base:'1:32'},notes:'Top tier ODM. Crazy kill rate.',tags:['hall-of-fame','smoothest'],gallery:[]},
-  {id:'d2',name:'Jaeger',pfp:'https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'A',stats:{control:'C',chainkill:'A',front_kill:'A',reverse_front_kill:'D',orbit:'C',grappling:'B'},missions:{outside_walls:'5:10',forest_base:'2:05'},notes:'Aggressive. Needs better control.',tags:['speed-runner'],gallery:[]},
-  {id:'d3',name:'Cadet 03',pfp:'https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'pool',stats:{control:'D',chainkill:'E',front_kill:'D',reverse_front_kill:'F',orbit:'D',grappling:'D'},missions:{},notes:'',tags:[],gallery:[]},
-  {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',reverse_front_kill:'D',orbit:'C',grappling:'A'},missions:{outside_walls:'5:50',forest_base:'1:55'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
+  {id:'d1',name:'Ackerman',pfp:'https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'S',stats:{control:'S',chainkill:'S',front_kill:'S',consistency:'A',orbit:'A',grappling:'S'},missions:{outside_walls:'3:45',forest_base:'1:32'},notes:'Top tier ODM. Crazy kill rate.',tags:['hall-of-fame','smoothest'],gallery:[]},
+  {id:'d2',name:'Jaeger',pfp:'https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'A',stats:{control:'C',chainkill:'A',front_kill:'A',consistency:'D',orbit:'C',grappling:'B'},missions:{outside_walls:'5:10',forest_base:'2:05'},notes:'Aggressive. Needs better control.',tags:['speed-runner'],gallery:[]},
+  {id:'d3',name:'Cadet 03',pfp:'https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'pool',stats:{control:'D',chainkill:'E',front_kill:'D',consistency:'F',orbit:'D',grappling:'D'},missions:{},notes:'',tags:[],gallery:[]},
+  {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',consistency:'D',orbit:'C',grappling:'A'},missions:{outside_walls:'5:50',forest_base:'1:55'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
 ];
 
 // ── GitHub Storage ──
@@ -1078,6 +1078,11 @@ function migrate(arr){
     if(e.pfp&&e.pfp.startsWith('data:'))e.pfp='';
     if(!e.notes)e.notes=e.testResults||'';
     if(typeof e.stats?.control==='number')e.stats=randStats();
+    if(e.stats&&e.stats.reverse_front_kill!==undefined&&e.stats.consistency===undefined){
+      e.stats.consistency=e.stats.reverse_front_kill;
+      delete e.stats.reverse_front_kill;
+    }
+    STATS.forEach(k=>{ if(e.stats&&e.stats[k]===undefined)e.stats[k]='C'; });
   });
 }
 
@@ -1245,7 +1250,7 @@ function gradeToNum(g){
 
 function calcScore(e){
   if(!e.stats)return 0;
-  const statWeights={control:1.3,chainkill:1.15,front_kill:1.1,reverse_front_kill:1,orbit:0.95,grappling:0.95};
+  const statWeights={control:1.3,chainkill:1.15,front_kill:1.1,consistency:1.0,orbit:0.95,grappling:0.95};
   let total=0,weightTotal=0;
   STATS.forEach(k=>{
     const g=e.stats[k];
@@ -1264,7 +1269,7 @@ function calcScore(e){
 
 function compareAuto(a,b){
   if(b.score!==a.score)return b.score-a.score;
-  const priority=['control','chainkill','front_kill','reverse_front_kill','orbit','grappling'];
+  const priority=['control','chainkill','front_kill','consistency','orbit','grappling'];
   for(const key of priority){
     const diff=gradeToNum((b.entry.stats&&b.entry.stats[key])||'F')-gradeToNum((a.entry.stats&&a.entry.stats[key])||'F');
     if(diff!==0)return diff;
@@ -1546,65 +1551,99 @@ function closeProfileForce(){document.getElementById('profileOverlay').classList
 function openLightbox(src){document.getElementById('lightboxImg').src=src;document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
 
-function buildProfileCaptureNode(){
-  const src=document.querySelector('#profileOverlay .modal-box');
-  if(!src)return null;
-  const rect=src.getBoundingClientRect();
-  const wrap=document.createElement('div');
-  wrap.style.cssText='position:fixed;left:-99999px;top:0;padding:26px;background:transparent;z-index:-1;overflow:visible;';
-
-  const clone=src.cloneNode(true);
-  clone.style.transform='none';
-  clone.style.maxHeight='none';
-  clone.style.overflow='visible';
-  clone.style.width=Math.ceil(rect.width)+'px';
-  clone.style.margin='0';
-  clone.style.background='rgba(22,22,31,0.98)';
-  clone.style.backdropFilter='none';
-  clone.style.webkitBackdropFilter='none';
-  clone.style.boxShadow='0 20px 60px rgba(0,0,0,0.5)';
-
-  const tools=clone.querySelector('.pfp-tools');
-  const close=clone.querySelector('.close-btn');
-  const del=clone.querySelector('#delBtn');
-  const notes=clone.querySelector('#notesArea');
-  if(tools)tools.remove();
-  if(close)close.remove();
-  if(del)del.remove();
-  if(notes){
-    notes.style.background='rgba(255,255,255,0.04)';
-    notes.style.borderColor='rgba(255,255,255,0.08)';
-    notes.style.height='auto';
-    notes.style.overflow='visible';
-  }
-  const top=clone.querySelector('.modal-top');
-  if(top){
-    top.style.paddingTop='34px';
-    top.style.overflow='visible';
-  }
-  const pfpWrap=clone.querySelector('.modal-pfp-wrap');
-  if(pfpWrap){
-    pfpWrap.style.marginTop='6px';
-    pfpWrap.style.overflow='visible';
-  }
-
-  wrap.appendChild(clone);
-  document.body.appendChild(wrap);
-  return {wrap,clone};
+function prepProfileCapture(){
+  const box=document.querySelector('#profileOverlay .modal-box');
+  if(!box)return null;
+  const tools=box.querySelector('.pfp-tools');
+  const close=box.querySelector('.close-btn');
+  const del=box.querySelector('#delBtn');
+  const top=box.querySelector('.modal-top');
+  const content=box.querySelector('.modal-content');
+  const pfpWrap=box.querySelector('.modal-pfp-wrap');
+  const notes=document.getElementById('notesArea');
+  const prev={
+    tools:tools?tools.style.display:'',
+    close:close?close.style.display:'',
+    del:del?del.style.display:'',
+    boxTransform:box.style.transform,
+    boxOverflow:box.style.overflow,
+    boxOverflowX:box.style.overflowX,
+    boxOverflowY:box.style.overflowY,
+    boxMaxHeight:box.style.maxHeight,
+    boxBg:box.style.background,
+    boxBackdrop:box.style.backdropFilter,
+    boxWebkitBackdrop:box.style.webkitBackdropFilter,
+    boxShadow:box.style.boxShadow,
+    topPad:top?top.style.paddingTop:'',
+    topOverflow:top?top.style.overflow:'',
+    contentOverflow:content?content.style.overflow:'',
+    pfpMargin:pfpWrap?pfpWrap.style.marginTop:'',
+    pfpOverflow:pfpWrap?pfpWrap.style.overflow:'',
+    notesBg:notes?notes.style.background:'',
+    notesBorder:notes?notes.style.borderColor:''
+  };
+  if(tools)tools.style.display='none';
+  if(close)close.style.display='none';
+  if(del)del.style.display='none';
+  box.style.transform='none';
+  box.style.overflow='visible';
+  box.style.overflowX='visible';
+  box.style.overflowY='visible';
+  box.style.maxHeight='none';
+  box.style.background='rgba(22,22,31,0.98)';
+  box.style.backdropFilter='none';
+  box.style.webkitBackdropFilter='none';
+  box.style.boxShadow='0 20px 60px rgba(0,0,0,0.5)';
+  if(top){top.style.paddingTop='34px';top.style.overflow='visible';}
+  if(content){content.style.overflow='visible';}
+  if(pfpWrap){pfpWrap.style.marginTop='6px';pfpWrap.style.overflow='visible';}
+  if(notes){notes.style.background='rgba(255,255,255,0.04)';notes.style.borderColor='rgba(255,255,255,0.08)';}
+  return function(){
+    if(tools)tools.style.display=prev.tools;
+    if(close)close.style.display=prev.close;
+    if(del)del.style.display=prev.del;
+    box.style.transform=prev.boxTransform;
+    box.style.overflow=prev.boxOverflow;
+    box.style.overflowX=prev.boxOverflowX;
+    box.style.overflowY=prev.boxOverflowY;
+    box.style.maxHeight=prev.boxMaxHeight;
+    box.style.background=prev.boxBg;
+    box.style.backdropFilter=prev.boxBackdrop;
+    box.style.webkitBackdropFilter=prev.boxWebkitBackdrop;
+    box.style.boxShadow=prev.boxShadow;
+    if(top){top.style.paddingTop=prev.topPad;top.style.overflow=prev.topOverflow;}
+    if(content){content.style.overflow=prev.contentOverflow;}
+    if(pfpWrap){pfpWrap.style.marginTop=prev.pfpMargin;pfpWrap.style.overflow=prev.pfpOverflow;}
+    if(notes){notes.style.background=prev.notesBg;notes.style.borderColor=prev.notesBorder;}
+  };
 }
 
 function renderProfileCapture(cb){
-  const built=buildProfileCaptureNode();
-  if(!built){toast('Open a profile first');return;}
-  const {wrap,clone}=built;
-  const scale=Math.min(2, Math.max(1, window.devicePixelRatio||1));
-  html2canvas(clone,{backgroundColor:null,scale,useCORS:true,allowTaint:true,logging:false,windowWidth:clone.scrollWidth+80,windowHeight:clone.scrollHeight+80}).then(canvas=>{
-    document.body.removeChild(wrap);
-    cb(canvas);
-  }).catch(err=>{
-    console.error(err);
-    if(document.body.contains(wrap))document.body.removeChild(wrap);
-    toast('Capture failed');
+  const box=document.querySelector('#profileOverlay .modal-box');
+  if(!box){toast('Open a profile first');return;}
+  const restore=prepProfileCapture();
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{
+      html2canvas(box,{
+        backgroundColor:null,
+        scale:2,
+        useCORS:true,
+        allowTaint:true,
+        logging:false,
+        removeContainer:true,
+        scrollX:0,
+        scrollY:-window.scrollY,
+        windowWidth:document.documentElement.clientWidth,
+        windowHeight:document.documentElement.clientHeight
+      }).then(canvas=>{
+        restore();
+        cb(canvas);
+      }).catch(err=>{
+        console.error(err);
+        restore();
+        toast('Capture failed');
+      });
+    });
   });
 }
 
