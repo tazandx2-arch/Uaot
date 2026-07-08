@@ -278,11 +278,11 @@
     "tier": "auto-A",
     "stats": {
       "control": "C",
-      "chainkill": "A",
+      "chainkill": "C",
       "front_kill": "C",
       "orbit": "B",
       "grappling": "C",
-      "consistency": "A"
+      "consistency": "B"
     },
     "notes": "",
     "tags": [],
