@@ -310,9 +310,9 @@
       "control": "A",
       "chainkill": "A",
       "front_kill": "S",
-      "orbit": "B",
+      "orbit": "A",
       "grappling": "S",
-      "consistency": "A",
+      "consistency": "B",
       "pathing": "A"
     },
     "notes": "S tier soon.",
