@@ -139,7 +139,7 @@
     "id": "e1783417078293s2xf",
     "name": "Ali",
     "pfp": "https://cdn.discordapp.com/avatars/1386827682301612124/452bb6e3ce6bc31165a043134a1412d9.png?size=1024",
-    "tier": "S",
+    "tier": "auto-S",
     "stats": {
       "control": "A",
       "chainkill": "S",
