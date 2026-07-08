@@ -1212,12 +1212,7 @@ const MISSIONS = [
    tiers:[{max:95,g:'S'},{max:120,g:'A'},{max:150,g:'B'},{max:180,g:'C'},{max:Infinity,g:'D'}]}
 ];
 
-const defaults = [
-  {id:'d1',name:'Ackerman',pfp:'https://images.pexels.com/photos/27279130/pexels-photo-27279130.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'S',stats:{control:'S',chainkill:'S',front_kill:'S',consistency:'A',orbit:'A',grappling:'S'},missions:{outside_walls:'3:45',forest_base:'1:32'},notes:'Top tier ODM. Crazy kill rate.',tags:['hall-of-fame','smoothest'],gallery:[]},
-  {id:'d2',name:'Jaeger',pfp:'https://images.pexels.com/photos/7728229/pexels-photo-7728229.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'A',stats:{control:'C',chainkill:'A',front_kill:'A',consistency:'D',orbit:'C',grappling:'B'},missions:{outside_walls:'5:10',forest_base:'2:05'},notes:'Aggressive. Needs better control.',tags:['speed-runner'],gallery:[]},
-  {id:'d3',name:'Cadet 03',pfp:'https://images.pexels.com/photos/37456704/pexels-photo-37456704.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'pool',stats:{control:'D',chainkill:'E',front_kill:'D',consistency:'F',orbit:'D',grappling:'D'},missions:{},notes:'',tags:[],gallery:[]},
-  {id:'d4',name:'Braun',pfp:'https://images.pexels.com/photos/14440674/pexels-photo-14440674.jpeg?auto=compress&cs=tinysrgb&w=400',tier:'B',stats:{control:'B',chainkill:'C',front_kill:'B',consistency:'D',orbit:'C',grappling:'A'},missions:{outside_walls:'5:50',forest_base:'1:55'},notes:'Solid. Good grappling.',tags:[],gallery:[]}
-];
+// No defaults - data comes only from GitHub
 
 // ── GitHub Storage ──
 // Public users read from data.json in the repo.
@@ -1255,7 +1250,6 @@ function migrate(arr){
 }
 
 function save(){
-  localStorage.setItem('tl_data',JSON.stringify(data));
   if(currentTab==='auto')drawAuto();
   if(!admin||!ghToken)return;
   if(savePending)clearTimeout(savePending);
@@ -1291,8 +1285,7 @@ function ghPull(){
   return fetch(GH_RAW+'?t='+Date.now())
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
     .then(d=>{
-      if(Array.isArray(d)&&d.length>0){data=d;migrate(data);localStorage.setItem('tl_data',JSON.stringify(data));}
-      else{fallbackLocal();}
+      if(Array.isArray(d)){data=d;migrate(data);}
     })
     .then(()=>{
       if(ghToken){
@@ -1300,17 +1293,12 @@ function ghPull(){
           .then(r=>r.json()).then(j=>{if(j.sha)fileSha=j.sha;}).catch(()=>{});
       }
     })
-    .catch(e=>{console.warn('ghPull failed:',e);fallbackLocal();});
-}
-
-function fallbackLocal(){
-  const local=localStorage.getItem('tl_data');
-  if(local){data=JSON.parse(local);migrate(data);}
-  else{data=JSON.parse(JSON.stringify(defaults));}
+    .catch(e=>{console.warn('ghPull failed:',e);});
 }
 
 function load(){
-  fallbackLocal();
+  data=[];
+  draw();
   ghPull().then(()=>{draw();});
 }
 
@@ -1419,11 +1407,8 @@ let reqFilter='all';
 function loadRequests(){
   fetch(GH_REQ_RAW+'?t='+Date.now())
     .then(r=>{if(!r.ok)throw new Error(r.status);return r.json();})
-    .then(d=>{if(Array.isArray(d)){requests=d;localStorage.setItem('tl_requests',JSON.stringify(requests));}})
-    .catch(()=>{
-      const local=localStorage.getItem('tl_requests');
-      if(local)try{requests=JSON.parse(local);}catch(e){requests=[];}
-    })
+    .then(d=>{if(Array.isArray(d)){requests=d;}})
+    .catch(()=>{requests=[];})
     .finally(()=>{updateReqBadge();if(currentTab==='requests')drawRequests();});
   // get sha for writing
   if(ghToken){
@@ -1433,7 +1418,6 @@ function loadRequests(){
 }
 
 function saveRequests(){
-  localStorage.setItem('tl_requests',JSON.stringify(requests));
   updateReqBadge();
   if(!admin||!ghToken)return;
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(requests,null,2))));
