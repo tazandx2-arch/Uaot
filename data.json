@@ -202,16 +202,16 @@
     "missions": {}
   },
   {
-    "id": "e1783486197578d12p",
-    "name": "AshFroaki",
-    "pfp": "https://cdn.discordapp.com/avatars/871012961018318878/648ba9205d702bf9c7418dc6ebe78e40.png?size=1024",
+    "id": "e1783486252611qabd",
+    "name": "The one with energy",
+    "pfp": "https://cdn.discordapp.com/avatars/1468669989492887662/2a6b9727d3cc678bae58d691fe4908eb.png?size=1024",
     "tier": "C",
     "stats": {
-      "control": "D",
+      "control": "C",
       "chainkill": "S",
-      "front_kill": "B",
-      "reverse_front_kill": "E",
-      "orbit": "F",
+      "front_kill": "D",
+      "reverse_front_kill": "D",
+      "orbit": "E",
       "grappling": "A"
     },
     "notes": "",
@@ -238,16 +238,16 @@
     "missions": {}
   },
   {
-    "id": "e1783486252611qabd",
-    "name": "The one with energy",
-    "pfp": "https://cdn.discordapp.com/avatars/1468669989492887662/2a6b9727d3cc678bae58d691fe4908eb.png?size=1024",
+    "id": "e1783486197578d12p",
+    "name": "AshFroaki",
+    "pfp": "https://cdn.discordapp.com/avatars/871012961018318878/648ba9205d702bf9c7418dc6ebe78e40.png?size=1024",
     "tier": "C",
     "stats": {
-      "control": "C",
+      "control": "D",
       "chainkill": "S",
-      "front_kill": "D",
-      "reverse_front_kill": "D",
-      "orbit": "E",
+      "front_kill": "B",
+      "reverse_front_kill": "E",
+      "orbit": "F",
       "grappling": "A"
     },
     "notes": "",
