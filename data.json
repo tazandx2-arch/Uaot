@@ -246,5 +246,23 @@
     "tags": [],
     "gallery": [],
     "missions": {}
+  },
+  {
+    "id": "e1783486663027mz15",
+    "name": "ae0nmike",
+    "pfp": "https://cdn.discordapp.com/avatars/858909711529410570/1a0ea17e86c77922c72a5effcdec7cdf.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "F",
+      "chainkill": "E",
+      "front_kill": "D",
+      "reverse_front_kill": "D",
+      "orbit": "E",
+      "grappling": "E"
+    },
+    "missions": {},
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
