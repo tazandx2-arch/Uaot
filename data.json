@@ -216,5 +216,22 @@
     "notes": "",
     "tags": [],
     "gallery": []
+  },
+  {
+    "id": "e1783486252611qabd",
+    "name": "The one with energy",
+    "pfp": "https://cdn.discordapp.com/avatars/1468669989492887662/2a6b9727d3cc678bae58d691fe4908eb.png?size=1024",
+    "tier": "pool",
+    "stats": {
+      "control": "F",
+      "chainkill": "S",
+      "front_kill": "D",
+      "reverse_front_kill": "D",
+      "orbit": "S",
+      "grappling": "A"
+    },
+    "notes": "",
+    "tags": [],
+    "gallery": []
   }
 ]
