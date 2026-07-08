@@ -8,9 +8,9 @@
       "control": "A",
       "chainkill": "A",
       "front_kill": "S",
-      "reverse_front_kill": "B",
       "orbit": "A",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "B"
     },
     "notes": "",
     "tags": [],
@@ -28,9 +28,9 @@
       "control": "S",
       "chainkill": "S",
       "front_kill": "S",
-      "reverse_front_kill": "S",
       "orbit": "S",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "S"
     },
     "notes": "Near perfect",
     "tags": [
@@ -54,9 +54,9 @@
       "control": "C",
       "chainkill": "A",
       "front_kill": "A",
-      "reverse_front_kill": "B",
       "orbit": "B",
-      "grappling": "A"
+      "grappling": "A",
+      "consistency": "B"
     },
     "notes": "Tied With Womp. Could be better",
     "tags": [],
@@ -74,9 +74,9 @@
       "control": "A",
       "chainkill": "S",
       "front_kill": "S",
-      "reverse_front_kill": "S",
       "orbit": "S",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "S"
     },
     "notes": "",
     "tags": [
@@ -97,9 +97,9 @@
       "control": "S",
       "chainkill": "A",
       "front_kill": "S",
-      "reverse_front_kill": "A",
       "orbit": "A",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "A"
     },
     "notes": "Inconsistent",
     "tags": [
@@ -119,9 +119,9 @@
       "control": "A",
       "chainkill": "B",
       "front_kill": "B",
-      "reverse_front_kill": "A",
       "orbit": "C",
-      "grappling": "B"
+      "grappling": "B",
+      "consistency": "A"
     },
     "notes": "Tied With Womp. Could be better",
     "tags": [],
@@ -142,9 +142,9 @@
       "control": "A",
       "chainkill": "S",
       "front_kill": "S",
-      "reverse_front_kill": "A",
       "orbit": "A",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "A"
     },
     "notes": "",
     "tags": [
@@ -163,10 +163,10 @@
     "stats": {
       "control": "A",
       "chainkill": "A",
-      "front_kill": "B",
-      "reverse_front_kill": "A",
+      "front_kill": "S",
       "orbit": "B",
-      "grappling": "S"
+      "grappling": "S",
+      "consistency": "A"
     },
     "notes": "S tier soon.",
     "tags": [],
@@ -184,9 +184,9 @@
       "control": "A",
       "chainkill": "B",
       "front_kill": "A",
-      "reverse_front_kill": "B",
       "orbit": "B",
-      "grappling": "A"
+      "grappling": "A",
+      "consistency": "B"
     },
     "missions": {},
     "notes": "",
@@ -202,9 +202,9 @@
       "control": "C",
       "chainkill": "S",
       "front_kill": "D",
-      "reverse_front_kill": "D",
       "orbit": "E",
-      "grappling": "A"
+      "grappling": "A",
+      "consistency": "D"
     },
     "notes": "",
     "tags": [],
@@ -220,9 +220,9 @@
       "control": "D",
       "chainkill": "C",
       "front_kill": "B",
-      "reverse_front_kill": "C",
       "orbit": "C",
-      "grappling": "C"
+      "grappling": "C",
+      "consistency": "C"
     },
     "notes": "",
     "tags": [
@@ -242,9 +242,9 @@
       "control": "D",
       "chainkill": "B",
       "front_kill": "D",
-      "reverse_front_kill": "F",
       "orbit": "C",
-      "grappling": "D"
+      "grappling": "D",
+      "consistency": "F"
     },
     "notes": "",
     "tags": [],
@@ -260,9 +260,9 @@
       "control": "D",
       "chainkill": "B",
       "front_kill": "C",
-      "reverse_front_kill": "E",
       "orbit": "B",
-      "grappling": "B"
+      "grappling": "B",
+      "consistency": "E"
     },
     "notes": "",
     "tags": [],
@@ -278,9 +278,9 @@
       "control": "C",
       "chainkill": "A",
       "front_kill": "C",
-      "reverse_front_kill": "A",
       "orbit": "B",
-      "grappling": "C"
+      "grappling": "C",
+      "consistency": "A"
     },
     "notes": "",
     "tags": [],
